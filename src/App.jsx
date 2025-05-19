@@ -57,11 +57,11 @@ function App() {
   };
 
   //Update Task
-  async function updateTask(task, event) {
+  async function updateTask(task, newStatus) {
     try {
       const updatedTask = {
         text: task.text,
-        status: event.target.value,
+        status: newStatus,
       };
       const response = await fetch(
         `https://jumpdecimal-newtonmike-3000.codio.io/tasks/${task.id}`,
@@ -105,6 +105,35 @@ function App() {
     }
   }
 
+  function renderTask(task) {
+    return (
+      <div key={task.id} className="taskCard">
+        <div className="taskText">{task.text.toUpperCase()}</div>
+        <div className="taskButtons">
+          {task.status === "todo" && (
+            <button
+              className="status-btn"
+              onClick={() => updateTask(task, "doing")}
+            >
+              Doing
+            </button>
+          )}
+          {task.status === "doing" && (
+            <button
+              className="status-btn"
+              onClick={() => updateTask(task, "done")}
+            >
+              Done
+            </button>
+          )}
+          <button className="delete-btn" onClick={() => deleteTask(task.id)}>
+            🗑️{" "}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   // Handle form submission
   function handleSubmit(event) {
     event.preventDefault();
@@ -113,7 +142,6 @@ function App() {
       status: taskStatus,
     };
     addTask(task);
-
     setTaskText("");
     setTaskStatus("todo");
   }
@@ -124,23 +152,21 @@ function App() {
 
   return (
     <div>
+      <h1>📋➡️📈 Kanban Board</h1>
       <form onSubmit={handleSubmit}>
-        <h1>Kanban Board</h1>
-        <div>
+        <div className="taskInput">
           <label>
-            Task Test:
             <input
               type="text"
               required
-              placeholder="Enter the to do task"
+              placeholder="Task text"
               value={taskText}
               onChange={(e) => setTaskText(e.target.value)}
             ></input>
           </label>
         </div>
-        <div>
+        <div className="status">
           <label>
-            Status:
             <select
               value={taskStatus}
               onChange={(e) => setTaskStatus(e.target.value)}
@@ -151,39 +177,24 @@ function App() {
             </select>
           </label>
         </div>
-        <button type="submit">Add Task</button>
-        <div>
-          <ul>
-            {tasks.map((task) => (
-              <li key={task.id}>
-                {task.text}
-                <button
-                  value="todo"
-                  onClick={() => updateTask(task, event)}
-                  disabled={task.status === "todo"}
-                >
-                  Todo
-                </button>
-                <button
-                  value="doing"
-                  onClick={() => updateTask(task, event)}
-                  disabled={task.status === "doing"}
-                >
-                  Doing
-                </button>
-                <button
-                  value="done"
-                  onClick={() => updateTask(task, event)}
-                  disabled={task.status === "done"}
-                >
-                  Done
-                </button>
-                <button onClick={() => deleteTask(task.id)}>Delete</button>
-              </li>
-            ))}
-          </ul>
+        <div className="addTask">
+          <button type="submit">Add Task</button>
         </div>
       </form>
+      <div className="kanban-columns">
+        <div className="column">
+          <h2>Todo</h2>
+          <div>{tasks.filter((t) => t.status === "todo").map(renderTask)}</div>
+        </div>
+        <div className="column">
+          <h2>Doing</h2>
+          <div>{tasks.filter((t) => t.status === "doing").map(renderTask)}</div>
+        </div>
+        <div className="column">
+          <h2>Done</h2>
+          <div>{tasks.filter((t) => t.status === "done").map(renderTask)}</div>
+        </div>
+      </div>
     </div>
   );
 }
