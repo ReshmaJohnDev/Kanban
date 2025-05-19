@@ -1,0 +1,33 @@
+{
+  "tasks": [
+      {
+          "id": 3,
+          "text": "Watch a movie",
+          "status": "doing"
+      },
+      {
+          "id": 4,
+          "status": "doing",
+          "text": "Learn Spanish"
+      },
+      {
+          "text": "pet Cat",
+          "status": "todo",
+          "id": 9
+      },
+      {
+          "text": "Watch a game",
+          "status": "done",
+          "id": 10
+      },
+      {
+          "id": 11,
+          "status": "doing",
+          "text": "run an errand"
+      },
+      {
+          "text": "Dishwasher",
+          "status": "done",
+          "id": 12
+      }
+  ]
